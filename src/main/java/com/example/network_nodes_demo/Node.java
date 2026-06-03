@@ -7,6 +7,9 @@ public class Node {
     private String vendor;
     private String location;
 
+    public Node() {
+    }
+
     public Node(Long id, String name, String vendor, String location) {
         this.id = id;
         this.name = name;

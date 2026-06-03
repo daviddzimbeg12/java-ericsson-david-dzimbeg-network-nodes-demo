@@ -1,8 +1,11 @@
 package com.example.network_nodes_demo;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class NodeRepository {
 
     private final List<Node> nodes = new ArrayList<>();
@@ -38,16 +41,30 @@ public class NodeRepository {
         return nodes;
     }
 
-    // Samostalni zadatak
     public Node findById(Long id) {
+        return nodes.stream()
+                .filter(node -> node.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
 
-        for (Node node : nodes) {
+    public Node save(Node node) {
+        nodes.add(node);
+        return node;
+    }
 
-            if (node.getId().equals(id)) {
-                return node;
-            }
-        }
+    // Samostalni zadatak
+    public List<Node> findByVendor(String vendor) {
 
-        return null;
+        return nodes.stream()
+                .filter(node -> node.getVendor().equalsIgnoreCase(vendor))
+                .toList();
+    }
+
+   // Dodatni dio
+   public List<Node> findByLocation(String location) {
+        return nodes.stream()
+            .filter(node -> node.getLocation().equalsIgnoreCase(location))
+            .toList();
     }
 }

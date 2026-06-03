@@ -1,10 +1,7 @@
 package com.example.network_nodes_demo;
 
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -12,24 +9,46 @@ import java.util.List;
 @RequestMapping("/nodes")
 public class NodeController {
 
-    private final NodeRepository repository = new NodeRepository();
+    private final NodeService service;
+
+    public NodeController(NodeService service) {
+        this.service = service;
+    }
 
     // GET /nodes
     @GetMapping
     public List<Node> getAllNodes() {
-        return repository.findAll();
+        return service.getAllNodes();
     }
+
 
     // GET /nodes/{id}
     @GetMapping("/{id}")
     public ResponseEntity<Node> getNodeById(@PathVariable Long id) {
 
-        Node node = repository.findById(id);
+        Node node = service.getNodeById(id);
 
         if (node == null) {
-            return ResponseEntity.notFound().build(); // 404
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(node); // 200 + JSON
+        return ResponseEntity.ok(node);
+    }
+
+    @PostMapping
+    public Node addNode(@RequestBody Node node) {
+        return service.addNode(node);
+    }
+
+    // Samostalni zadatak
+    @GetMapping("/vendor/{vendor}")
+    public List<Node> getNodesByVendor(@PathVariable String vendor) {
+        return service.getNodesByVendor(vendor);
+    }
+
+    // Dodatni dio
+    @GetMapping("/location/{location}")
+    public List<Node> getNodesByLocation(@PathVariable String location) {
+        return service.getNodesByLocation(location);
     }
 }
